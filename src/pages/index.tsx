@@ -42,7 +42,6 @@ const Home: NextPage = () => {
         </main>
       </div>
       {!user.isSignedIn && <AuthFooter />}
-      {!!user.isSignedIn && <SignOutButton />}
     </>
   );
 };
