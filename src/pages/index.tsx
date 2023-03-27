@@ -65,7 +65,7 @@ const TweetView = (props: TweetWithUser) => {
       <div className="hidden hover:bg-sky-500 hover:bg-green-500 hover:bg-bright-pink hover:text-sky-500 hover:text-bright-pink hover:text-green-500"></div>
       <div key={tweet.id} className="flex gap-4 border-y border-zinc-800 p-4">
         <div className="h-[40px] w-[40px]">
-          <Image
+          <img
             src={author?.profilePicture}
             width={100}
             height={100}
