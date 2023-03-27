@@ -1,7 +1,7 @@
 // Dependencies
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { CheckIcon } from '@heroicons/react/24/outline';
+import clsx from 'clsx';
 import { useUser } from '@clerk/nextjs';
 import Image from 'next/image';
 
@@ -163,10 +163,6 @@ export const TweetModal = ({
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative w-full transform gap-3 bg-black px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:rounded-2xl sm:py-2 sm:px-4">
-                <div
-                  className="h-2.5 rounded-full bg-bright-pink duration-150 ease-linear"
-                  style={{ width: `45%` }}
-                ></div>
                 <div className="">
                   <button
                     className="tooltip tooltip-bottom w-fit rounded-full p-2 hover:bg-zinc-900"
@@ -224,7 +220,14 @@ export const TweetModal = ({
                             mutate({ text: input });
                             setTweetModalOpen(false);
                           }}
-                          className="w-fit rounded-full bg-bright-pink p-2 text-lg font-bold"
+                          disabled={
+                            (charCount === 0 || charCount > 280) ?? false
+                          }
+                          className={clsx(
+                            'w-fit rounded-full bg-bright-pink p-2 text-lg font-bold',
+                            charCount === 0 && 'bg-pink-800 text-gray-400',
+                            charCount > 280 && 'bg-pink-800 text-gray-400'
+                          )}
                         >
                           Tweet
                         </button>
