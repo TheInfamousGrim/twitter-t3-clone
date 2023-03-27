@@ -112,8 +112,8 @@ export const SideNavigation = () => {
   }
   return (
     <>
-      <header className="max-w-3xl p-4">
-        <nav className="flex h-full flex-col justify-between">
+      <header className="fixed top-0 left-0 min-w-[68px] p-4 xl:w-72">
+        <nav className="flex h-full flex-col items-center justify-between">
           <div className="flex flex-col gap-2">
             <a
               href="#"
@@ -158,7 +158,7 @@ export const SideNavigation = () => {
             </button>
           </div>
           <div
-            className="tooltip tooltip-top flex justify-center rounded-full p-2 duration-150 ease-in hover:bg-zinc-900"
+            className="tooltip tooltip-top mb-4 mt-6 flex justify-center rounded-full p-2 duration-150 ease-in hover:bg-zinc-900 xl:w-48 xl:justify-start"
             data-tip="Account"
           >
             <UserButton />

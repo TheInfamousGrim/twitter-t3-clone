@@ -24,6 +24,7 @@ type TweetModalTypes = {
   setTweetModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 import type { ChangeEvent } from 'react';
+import { LoadingSpinner } from './LoadingSpinner';
 
 export const TweetModal = ({
   tweetModalOpen,
@@ -163,7 +164,7 @@ export const TweetModal = ({
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative w-full transform gap-3 bg-black px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:rounded-2xl sm:py-2 sm:px-4">
-                <div className="">
+                <div className="flex justify-between">
                   <button
                     className="tooltip tooltip-bottom w-fit rounded-full p-2 hover:bg-zinc-900"
                     data-tip="Close"
@@ -172,6 +173,7 @@ export const TweetModal = ({
                     <XMarkIcon className="h-6 w-6" />
                     <p className="sr-only">Close</p>
                   </button>
+                  {isTweeting && <LoadingSpinner size={20} />}
                 </div>
                 <div className="flex w-full gap-4">
                   <div className="mt-4">
