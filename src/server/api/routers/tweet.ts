@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
-import { createTRPCRouter, publicProcedure } from '~/server/api/trpc';
+import {
+  createTRPCRouter,
+  privateProcedure,
+  publicProcedure,
+} from '~/server/api/trpc';
 import type { User } from '@clerk/nextjs/dist/api';
 import { clerkClient } from '@clerk/nextjs/server';
 import type { Tweet } from '@prisma/client';
@@ -55,5 +59,12 @@ export const tweetRouter = createTRPCRouter({
         author: users.find((user) => user.id === tweet.authorId),
       };
     });
+  }),
+
+  // Create a new tweet
+  create: privateProcedure.mutation(async ({ ctx }) => {
+    const authorId = ctx.userId;
+
+    const post = await ctx.prisma.tweet.create({});
   }),
 });
