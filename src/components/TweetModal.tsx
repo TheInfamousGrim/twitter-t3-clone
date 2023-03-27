@@ -4,6 +4,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import clsx from 'clsx';
 import { useUser } from '@clerk/nextjs';
 import Image from 'next/image';
+import toast from 'react-hot-toast';
 
 // Icons
 import { XMarkIcon, GlobeEuropeAfricaIcon } from '@heroicons/react/24/solid';
@@ -39,11 +40,32 @@ export const TweetModal = ({
   // User context
   const ctx = api.useContext();
 
-  // Mutation
+  // Mutation for creating a tweet
   const { mutate, isLoading: isTweeting } = api.tweet.create.useMutation({
     onSuccess: () => {
       setInput('');
       void ctx.tweet.getAll.invalidate();
+      setTweetModalOpen(false);
+    },
+    onError: (e) => {
+      const errorMessage = e.data?.zodError?.fieldErrors.text;
+      if (errorMessage && errorMessage[0]) {
+        toast.error(errorMessage[0], {
+          style: {
+            border: '1px solid #f91880',
+            backgroundColor: 'black',
+            color: '#F3F4F6',
+          },
+        });
+      } else {
+        toast.error('Failed to post! Please try again later.', {
+          style: {
+            border: '1px solid #f91880',
+            backgroundColor: 'black',
+            color: '#F3F4F6',
+          },
+        });
+      }
     },
   });
 
@@ -219,8 +241,8 @@ export const TweetModal = ({
                         <button
                           type="button"
                           onClick={(e) => {
+                            e.preventDefault();
                             mutate({ text: input });
-                            setTweetModalOpen(false);
                           }}
                           disabled={
                             (charCount === 0 || charCount > 280) ?? false

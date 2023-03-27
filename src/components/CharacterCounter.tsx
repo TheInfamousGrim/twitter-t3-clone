@@ -11,24 +11,16 @@ export const CharacterCounter = (props: { charCount: number }) => {
   const dashArray = 2 * Math.PI * 19;
   const dashOffset = dashArray * ((280 - props.charCount) / 280);
 
-  let strokeColor = '#f91880';
   let charTextColor = '#A1A1AA';
 
   switch (true) {
     case 280 - props.charCount <= 0:
-      strokeColor = '#DC2626';
       charTextColor = '#DC2626';
-    case 280 - props.charCount <= 20:
-      strokeColor = '#F59E0B';
-    case 280 - props.charCount > 20:
-      strokeColor = '#f91880';
   }
-
-  console.log(strokeColor);
 
   return (
     <div className="relative w-fit">
-      <div className="absolute inset-0 h-full text-center">
+      <div className="absolute inset-0 z-10 h-full text-center">
         {280 - props.charCount <= 20 && (
           <p
             className="flex h-full items-center justify-center text-sm text-zinc-400"
@@ -44,6 +36,7 @@ export const CharacterCounter = (props: { charCount: number }) => {
         viewBox="0 0 42 42"
         initial="hidden"
         animate="visible"
+        className="-rotate-90"
       >
         {280 - props.charCount > 0 && 280 - props.charCount < 280 && (
           <motion.circle
