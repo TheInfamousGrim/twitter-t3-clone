@@ -62,9 +62,30 @@ export const tweetRouter = createTRPCRouter({
   }),
 
   // Create a new tweet
-  create: privateProcedure.mutation(async ({ ctx }) => {
-    const authorId = ctx.userId;
+  create: privateProcedure
+    .input(
+      z.object({
+        text: z.string().min(1).max(280),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const authorId = ctx.userId;
 
-    const post = await ctx.prisma.tweet.create({});
-  }),
+      if (!authorId) {
+        console.error('USER NOT SIGNED IN');
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: `You are not signed in, please authenticate so that you may tweet`,
+        });
+      }
+
+      const tweet = await ctx.prisma.tweet.create({
+        data: {
+          authorId,
+          text: input.text,
+        },
+      });
+
+      return tweet;
+    }),
 });

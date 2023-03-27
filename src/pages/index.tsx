@@ -58,6 +58,7 @@ const tweetButtonData = [
 //Types
 type TweetWithUser = RouterOutputs['tweet']['getAll'][number];
 
+/* --------------------------- Tweet Timeline View -------------------------- */
 const TweetView = (props: TweetWithUser) => {
   const { tweet, author } = props;
   const formattedDate = dayjs(tweet.createdAt).format('MMM D YYYY HH:mm');
@@ -72,7 +73,7 @@ const TweetView = (props: TweetWithUser) => {
   return (
     <>
       <div className="hidden hover:bg-sky-500 hover:bg-green-500 hover:bg-bright-pink hover:text-sky-500 hover:text-bright-pink hover:text-green-500"></div>
-      <div key={tweet.id} className="flex gap-4 border-y border-zinc-800 p-4">
+      <div key={tweet.id} className="flex gap-4 border-b border-zinc-800 p-4">
         <div className="h-[40px] w-[40px]">
           <Image
             src={author?.profilePicture}
@@ -124,7 +125,7 @@ const Feed = () => {
 
   return (
     <>
-      {[...data, ...data]?.map((fullTweet) => (
+      {[...data]?.map((fullTweet) => (
         <TweetView {...fullTweet} key={fullTweet.tweet.id} />
       ))}
     </>

@@ -1,10 +1,16 @@
+// Dependencies
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { useUser } from '@clerk/nextjs';
+import Image from 'next/image';
+
+// Icons
 import { XMarkIcon, GlobeEuropeAfricaIcon } from '@heroicons/react/24/solid';
 import { FaceSmileIcon } from '@heroicons/react/24/outline';
-import Image from 'next/image';
+
+// Api
+import { api } from '~/utils/api';
 
 type TweetModalTypes = {
   tweetModalOpen: boolean;
@@ -19,6 +25,12 @@ export const TweetModal = ({
   const { user, isLoaded, isSignedIn } = useUser();
   // Input for the tweet
   const [input, setInput] = useState('');
+
+  // User context
+  const ctx = api.useContext();
+
+  // Mutation
+  const { mutate } = api.tweet.create.useMutation();
 
   if (!isLoaded || !isSignedIn) {
     return (
@@ -98,6 +110,8 @@ export const TweetModal = ({
     );
   }
 
+  /* ------------------------- Authorized Tweet Modal ------------------------- */
+
   return (
     <Transition.Root show={tweetModalOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setTweetModalOpen}>
@@ -137,7 +151,7 @@ export const TweetModal = ({
                 </div>
                 <div className="flex w-full gap-4">
                   <div className="mt-4">
-                    <img
+                    <Image
                       src={user.profileImageUrl}
                       height={48}
                       width={48}
@@ -156,6 +170,8 @@ export const TweetModal = ({
                         placeholder={`What's going on?`}
                         className="block w-full rounded-md border-none bg-transparent text-xl text-gray-100 shadow-sm outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bright-pink sm:py-1.5 sm:leading-6"
                         defaultValue={''}
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
                       />
                       <div className="my-4 flex items-center gap-1">
                         <GlobeEuropeAfricaIcon className="h-4 w-4 text-bright-pink" />
@@ -172,7 +188,14 @@ export const TweetModal = ({
                         <FaceSmileIcon className="h-6 w-6 text-bright-pink" />
                         <p className="sr-only">Emoji Picker</p>
                       </button>
-                      <button className="w-fit rounded-full bg-bright-pink p-2 text-lg font-bold">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          mutate({ text: input });
+                          setTweetModalOpen(false);
+                        }}
+                        className="w-fit rounded-full bg-bright-pink p-2 text-lg font-bold"
+                      >
                         Tweet
                       </button>
                     </div>
