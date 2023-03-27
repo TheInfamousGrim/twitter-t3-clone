@@ -3,19 +3,107 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useUser, SignOutButton } from '@clerk/nextjs';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+dayjs.extend(customParseFormat);
 
 // API
-import { api } from '~/utils/api';
+import { api, type RouterOutputs } from '~/utils/api';
 
 // Components
 import { AuthFooter } from '~/components/AuthFooter';
 import { SideNavigation } from '~/components/SideNavigation';
 import { NewToTwooter } from '~/components/NewToTwooter';
+import { disconnect } from 'process';
+
+// Icons
+import {
+  ChatBubbleOvalLeftIcon,
+  ArrowPathRoundedSquareIcon,
+  HeartIcon,
+  ChartBarIcon,
+  ArrowUpTrayIcon,
+} from '@heroicons/react/24/outline';
+
+// Tweet Button Data
+const tweetButtonData = [
+  {
+    name: 'Reply',
+    icon: ChatBubbleOvalLeftIcon,
+    hoverColor: 'sky-500',
+  },
+  {
+    name: 'Retweet',
+    icon: ArrowPathRoundedSquareIcon,
+    hoverColor: 'green-500',
+  },
+  {
+    name: 'Like',
+    icon: HeartIcon,
+    hoverColor: 'bright-pink',
+  },
+  {
+    name: 'View',
+    icon: ChartBarIcon,
+    hoverColor: 'sky-500',
+  },
+  {
+    name: 'Share',
+    icon: ArrowUpTrayIcon,
+    hoverColor: 'sky-500',
+  },
+];
+
+//Types
+type TweetWithUser = RouterOutputs['tweet']['getAll'][number];
+
+const TweetView = (props: TweetWithUser) => {
+  const { tweet, author } = props;
+  const formattedDate = dayjs(tweet.createdAt).format('MMM D YYYY HH:mm');
+  return (
+    <>
+      <div className="hidden hover:bg-sky-500 hover:bg-green-500 hover:bg-bright-pink hover:text-sky-500 hover:text-bright-pink hover:text-green-500"></div>
+      <div key={tweet.id} className="flex gap-4 border-y border-zinc-800 p-4">
+        <div>
+          <img
+            src={author?.profilePicture}
+            width={40}
+            height={40}
+            className="rounded-full duration-150 ease-in hover:cursor-pointer hover:bg-gray-50 hover:bg-opacity-10"
+          />
+        </div>
+        <div className="grow">
+          <div className="flex gap-2">
+            <h4 className="font-bold text-gray-50">{author?.username}</h4>
+            <p className="text-zinc-400">{formattedDate}</p>
+          </div>
+          <div className="mt-1">{tweet.text}</div>
+          <div className="mt-1 flex justify-between">
+            {tweetButtonData.map((buttonData, index) => {
+              return (
+                <button
+                  key={`${buttonData.name}-${index}`}
+                  className={`tooltip tooltip-bottom rounded-full p-2 duration-150 ease-in hover:bg-${buttonData.hoverColor} hover:bg-opacity-10`}
+                  data-tip={buttonData.name}
+                >
+                  <buttonData.icon
+                    className={`h-5 w-5 text-zinc-400 duration-150 ease-in hover:text-${buttonData.hoverColor}`}
+                  />
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
 
 const Home: NextPage = () => {
   const { data, isLoading } = api.tweet.getAll.useQuery();
 
   const user = useUser();
+  console.log(user);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -32,10 +120,8 @@ const Home: NextPage = () => {
         <SideNavigation />
         <main className="flex grow md:grow-0">
           <div className="w-full max-w-[600px] border-x border-zinc-800 md:w-[600px]">
-            {data?.map((tweet) => (
-              <div key={tweet.id} className="border-y border-zinc-800 p-8">
-                {tweet.text}
-              </div>
+            {[...data, ...data]?.map((fullTweet) => (
+              <TweetView {...fullTweet} key={fullTweet.tweet.id} />
             ))}
           </div>
           {!user.isSignedIn && <NewToTwooter />}
