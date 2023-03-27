@@ -13,6 +13,7 @@ import { api, type RouterOutputs } from '~/utils/api';
 
 // Components
 import { AuthFooter } from '~/components/AuthFooter';
+import { LoadingPage, LoadingSpinner } from '~/components/LoadingSpinner';
 import { SideNavigation } from '~/components/SideNavigation';
 import { NewToTwooter } from '~/components/NewToTwooter';
 
@@ -108,15 +109,33 @@ const TweetView = (props: TweetWithUser) => {
   );
 };
 
-const Home: NextPage = () => {
-  const { data, isLoading } = api.tweet.getAll.useQuery();
+const Feed = () => {
+  const { data, isLoading: tweetsLoading } = api.tweet.getAll.useQuery();
 
-  const user = useUser();
-  console.log(user);
-
-  if (isLoading) return <div>Loading...</div>;
+  if (tweetsLoading) {
+    return (
+      <div className="mt-4 flex items-center justify-center">
+        <LoadingSpinner size={40} />
+      </div>
+    );
+  }
 
   if (!data) return <div>Something went wrong</div>;
+
+  return (
+    <>
+      {[...data, ...data]?.map((fullTweet) => (
+        <TweetView {...fullTweet} key={fullTweet.tweet.id} />
+      ))}
+    </>
+  );
+};
+
+const Home: NextPage = () => {
+  const { isLoaded: userLoaded, isSignedIn } = useUser();
+
+  // Return an empty div if there is no user
+  if (!userLoaded) return <div />;
 
   return (
     <>
@@ -129,14 +148,12 @@ const Home: NextPage = () => {
         <SideNavigation />
         <main className="flex grow md:grow-0">
           <div className="w-full max-w-[600px] border-x border-zinc-800 md:w-[600px]">
-            {[...data, ...data]?.map((fullTweet) => (
-              <TweetView {...fullTweet} key={fullTweet.tweet.id} />
-            ))}
+            <Feed />
           </div>
-          {!user.isSignedIn && <NewToTwooter />}
+          {!isSignedIn && <NewToTwooter />}
         </main>
       </div>
-      {!user.isSignedIn && <AuthFooter />}
+      {!isSignedIn && <AuthFooter />}
     </>
   );
 };
