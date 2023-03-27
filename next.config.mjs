@@ -19,11 +19,7 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    remotePatterns: [
-      {
-        hostname: 'images.clerk.dev',
-      }
-    ]
+    domains: ["images.clerk.dev"]
   }
 };
 export default config;

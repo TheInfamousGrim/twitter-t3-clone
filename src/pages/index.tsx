@@ -2,6 +2,7 @@ import { type NextPage } from 'next';
 // Dependencies
 import Head from 'next/head';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useUser, SignOutButton } from '@clerk/nextjs';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -14,7 +15,6 @@ import { api, type RouterOutputs } from '~/utils/api';
 import { AuthFooter } from '~/components/AuthFooter';
 import { SideNavigation } from '~/components/SideNavigation';
 import { NewToTwooter } from '~/components/NewToTwooter';
-import { disconnect } from 'process';
 
 // Icons
 import {
@@ -64,18 +64,19 @@ const TweetView = (props: TweetWithUser) => {
     <>
       <div className="hidden hover:bg-sky-500 hover:bg-green-500 hover:bg-bright-pink hover:text-sky-500 hover:text-bright-pink hover:text-green-500"></div>
       <div key={tweet.id} className="flex gap-4 border-y border-zinc-800 p-4">
-        <div>
-          <img
+        <div className="h-[40px] w-[40px]">
+          <Image
             src={author?.profilePicture}
-            width={40}
-            height={40}
+            width={100}
+            height={100}
             className="rounded-full duration-150 ease-in hover:cursor-pointer hover:bg-gray-50 hover:bg-opacity-10"
+            alt={`@${author?.username}'s profile picture`}
           />
         </div>
         <div className="grow">
           <div className="flex gap-2">
             <h4 className="font-bold text-gray-50">{author?.username}</h4>
-            <p className="text-zinc-400">{formattedDate}</p>
+            <p className="text-zinc-400">{`· ${formattedDate}`}</p>
           </div>
           <div className="mt-1">{tweet.text}</div>
           <div className="mt-1 flex justify-between">
@@ -83,7 +84,7 @@ const TweetView = (props: TweetWithUser) => {
               return (
                 <button
                   key={`${buttonData.name}-${index}`}
-                  className={`tooltip tooltip-bottom rounded-full p-2 duration-150 ease-in hover:bg-${buttonData.hoverColor} hover:bg-opacity-10`}
+                  className={`tooltip tooltip-bottom rounded-full p-2 duration-150 hover:text-${buttonData.hoverColor} ease-in hover:bg-${buttonData.hoverColor} hover:bg-opacity-10`}
                   data-tip={buttonData.name}
                 >
                   <buttonData.icon
