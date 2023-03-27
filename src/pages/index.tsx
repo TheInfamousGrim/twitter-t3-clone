@@ -60,12 +60,20 @@ type TweetWithUser = RouterOutputs['tweet']['getAll'][number];
 const TweetView = (props: TweetWithUser) => {
   const { tweet, author } = props;
   const formattedDate = dayjs(tweet.createdAt).format('MMM D YYYY HH:mm');
+
+  if (!author || !author.profilePicture || !author.username) {
+    return (
+      <div>
+        <p>{`Couldn't load tweet`}</p>
+      </div>
+    );
+  }
   return (
     <>
       <div className="hidden hover:bg-sky-500 hover:bg-green-500 hover:bg-bright-pink hover:text-sky-500 hover:text-bright-pink hover:text-green-500"></div>
       <div key={tweet.id} className="flex gap-4 border-y border-zinc-800 p-4">
         <div className="h-[40px] w-[40px]">
-          <img
+          <Image
             src={author?.profilePicture}
             width={100}
             height={100}
