@@ -9,13 +9,18 @@ import Image from 'next/image';
 import { XMarkIcon, GlobeEuropeAfricaIcon } from '@heroicons/react/24/solid';
 import { FaceSmileIcon } from '@heroicons/react/24/outline';
 
+// Components
+import { CharacterCounter } from './CharacterCounter';
+
 // Api
 import { api } from '~/utils/api';
 
+// Types
 type TweetModalTypes = {
   tweetModalOpen: boolean;
   setTweetModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+import type { ChangeEvent } from 'react';
 
 export const TweetModal = ({
   tweetModalOpen,
@@ -25,12 +30,28 @@ export const TweetModal = ({
   const { user, isLoaded, isSignedIn } = useUser();
   // Input for the tweet
   const [input, setInput] = useState('');
+  const [charCount, setCharCount] = useState(0);
 
   // User context
   const ctx = api.useContext();
 
   // Mutation
-  const { mutate } = api.tweet.create.useMutation();
+  const { mutate, isLoading: isTweeting } = api.tweet.create.useMutation({
+    onSuccess: () => {
+      setInput('');
+      void ctx.tweet.getAll.invalidate();
+    },
+  });
+
+  // User Input Event Handler
+  const handleCharacterInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    // set the input to the
+    e.stopPropagation();
+    setInput(e.currentTarget.value);
+
+    // set the current char length
+    setCharCount(e.currentTarget.value.length);
+  };
 
   if (!isLoaded || !isSignedIn) {
     return (
@@ -139,6 +160,10 @@ export const TweetModal = ({
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative w-full transform gap-3 bg-black px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:rounded-2xl sm:py-2 sm:px-4">
+                <div
+                  className="h-2.5 rounded-full bg-bright-pink duration-150 ease-linear"
+                  style={{ width: `45%` }}
+                ></div>
                 <div className="">
                   <button
                     className="tooltip tooltip-bottom w-fit rounded-full p-2 hover:bg-zinc-900"
@@ -171,7 +196,7 @@ export const TweetModal = ({
                         className="block w-full rounded-md border-none bg-transparent text-xl text-gray-100 shadow-sm outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bright-pink sm:py-1.5 sm:leading-6"
                         defaultValue={''}
                         value={input}
-                        onChange={(e) => setInput(e.target.value)}
+                        onChange={(e) => handleCharacterInput(e)}
                       />
                       <div className="my-4 flex items-center gap-1">
                         <GlobeEuropeAfricaIcon className="h-4 w-4 text-bright-pink" />
@@ -188,16 +213,19 @@ export const TweetModal = ({
                         <FaceSmileIcon className="h-6 w-6 text-bright-pink" />
                         <p className="sr-only">Emoji Picker</p>
                       </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          mutate({ text: input });
-                          setTweetModalOpen(false);
-                        }}
-                        className="w-fit rounded-full bg-bright-pink p-2 text-lg font-bold"
-                      >
-                        Tweet
-                      </button>
+                      <div className="flex items-center gap-4">
+                        <CharacterCounter charCount={charCount} />
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            mutate({ text: input });
+                            setTweetModalOpen(false);
+                          }}
+                          className="w-fit rounded-full bg-bright-pink p-2 text-lg font-bold"
+                        >
+                          Tweet
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

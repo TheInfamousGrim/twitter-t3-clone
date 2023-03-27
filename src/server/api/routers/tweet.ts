@@ -34,6 +34,7 @@ export const tweetRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const tweets = await ctx.prisma.tweet.findMany({
       take: 100,
+      orderBy: [{ createdAt: 'desc' }],
     });
 
     const users = (
