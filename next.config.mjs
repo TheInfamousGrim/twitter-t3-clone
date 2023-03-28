@@ -20,6 +20,16 @@ const config = {
   },
   images: {
     domains: ["images.clerk.dev", "res.cloudinary.com"]
-  }
+  },
+
+  // Ignore linting and typescript, doing that through GitHub CI
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  swcMinify: true,
+
 };
 export default config;
