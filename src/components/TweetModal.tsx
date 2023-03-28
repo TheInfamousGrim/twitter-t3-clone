@@ -1,10 +1,12 @@
 // Dependencies
-import { Fragment, useState } from 'react';
-import { Dialog, Transition } from '@headlessui/react';
 import clsx from 'clsx';
-import { useUser } from '@clerk/nextjs';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useState } from 'react';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
+import StarterKit from '@tiptap/starter-kit';
+import { useEditor, EditorContent } from '@tiptap/react';
+import { useUser } from '@clerk/nextjs';
 
 // Icons
 import { XMarkIcon, GlobeEuropeAfricaIcon } from '@heroicons/react/24/solid';
@@ -19,6 +21,21 @@ import { CharacterCounter } from './CharacterCounter';
 
 // Api
 import { api } from '~/utils/api';
+
+// TipTap Rich Text Editor
+const TweetRichTextEditor = () => {
+  const editor = useEditor({
+    editorProps: {
+      attributes: {
+        class: 'max-h-',
+      },
+    },
+    extensions: [StarterKit],
+    content: '<p>Hello World! 🌍</p>',
+  });
+
+  return <EditorContent editor={editor} />;
+};
 
 // Types
 type TweetModalTypes = {
@@ -213,7 +230,8 @@ export const TweetModal = ({
                       <Dialog.Title as="h3" className="sr-only">
                         Create your tweet
                       </Dialog.Title>
-                      <textarea
+                      <TweetRichTextEditor />
+                      {/* <textarea
                         rows={6}
                         name="comment"
                         id="comment"
@@ -222,7 +240,7 @@ export const TweetModal = ({
                         defaultValue={''}
                         value={input}
                         onChange={(e) => handleCharacterInput(e)}
-                      />
+                      /> */}
                       <div className="my-4 flex items-center gap-1">
                         <GlobeEuropeAfricaIcon className="h-4 w-4 text-bright-pink" />
                         <p className="text-sm font-bold text-bright-pink">
