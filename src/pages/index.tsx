@@ -133,7 +133,7 @@ const Feed = () => {
 
   return (
     <>
-      {[...data, ...data, ...data, ...data]?.map((fullTweet) => (
+      {[...data]?.map((fullTweet) => (
         <TweetView {...fullTweet} key={fullTweet.tweet.id} />
       ))}
     </>

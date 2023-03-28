@@ -80,7 +80,13 @@ export const tweetRouter = createTRPCRouter({
   create: privateProcedure
     .input(
       z.object({
-        text: z.string().min(1).max(280),
+        text: z
+          .string({
+            required_error: 'Twoot requires some text',
+            invalid_type_error: "That doesn't appear to be text",
+          })
+          .min(1, { message: 'Twoot must contain at least 1 character' })
+          .max(280, { message: 'Twoot cannot be longer than 280 characters' }),
       })
     )
     .mutation(async ({ ctx, input }) => {
