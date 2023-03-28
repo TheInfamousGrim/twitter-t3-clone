@@ -5,6 +5,7 @@ import { Fragment, useState } from 'react';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
 import StarterKit from '@tiptap/starter-kit';
+import Placeholder from '@tiptap/extension-placeholder';
 import { useEditor, EditorContent } from '@tiptap/react';
 import { useUser } from '@clerk/nextjs';
 
@@ -23,15 +24,25 @@ import { CharacterCounter } from './CharacterCounter';
 import { api } from '~/utils/api';
 
 // TipTap Rich Text Editor
-const TweetRichTextEditor = () => {
+const TweetRichTextEditor = (e) => {
   const editor = useEditor({
     editorProps: {
       attributes: {
-        class: 'max-h-',
+        class:
+          'max-h-64 overflow-scroll rounded-md border-none bg-transparent text-xl text-gray-100 shadow-sm outline-none placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bright-pink sm:py-1.5 sm:leading-6',
       },
     },
-    extensions: [StarterKit],
-    content: '<p>Hello World! 🌍</p>',
+    onUpdate({ editor, e }) {
+      e.handlerCharacterInput();
+    },
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        emptyEditorClass:
+          'text-zinc-500 before:content-[attr(data-placeholder)] float-left h-0 pointer-events-none',
+        placeholder: 'Write something',
+      }),
+    ],
   });
 
   return <EditorContent editor={editor} />;
