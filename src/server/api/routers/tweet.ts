@@ -66,6 +66,18 @@ const addUserDataToPosts = async (tweets: Tweet[]) => {
 };
 
 export const tweetRouter = createTRPCRouter({
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const tweet = await ctx.prisma.tweet.findUnique({
+        where: { id: input.id },
+      });
+
+      if (!tweet) throw new TRPCError({ code: 'NOT_FOUND' });
+
+      return (await addUserDataToPosts([tweet]))[0];
+    }),
+
   // Get 100 tweets and display them to the home page
   getAll: publicProcedure.query(async ({ ctx }) => {
     const tweets = await ctx.prisma.tweet.findMany({

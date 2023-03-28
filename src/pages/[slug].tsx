@@ -56,18 +56,25 @@ const ProfileFeed = (props: { userId: string }) => {
 };
 
 const Profile: NextPage<{ username: string }> = ({ username }) => {
-  const { isLoaded: userLoaded, isSignedIn, user } = useUser();
+  const { isSignedIn, user } = useUser();
   const { data, isLoading } = api.profile.getUserByUsername.useQuery({
     username,
   });
 
   if (!data || !data.username || !data.profileImageUrl) return <div>404</div>;
 
-  // Return an empty div if there is no user
-  if (!userLoaded) return <div />;
-  console.log(dayjs(data.createdAt));
+  // Handling the user id
+  let userPlaceholder;
+  if (!user || !user.id) {
+    userPlaceholder = {
+      id: null
+    }
+  } else {
+    userPlaceholder = {
+      id: user.id
+    }
+  }
 
-  if (!user || !user.username) return <div>No user loaded</div>;
 
   return (
     <>
@@ -106,7 +113,7 @@ const Profile: NextPage<{ username: string }> = ({ username }) => {
             </div>
             <div className="mt-2 mb-4 w-full px-4 pt-3">
               <div className="flex items-start justify-end">
-                {data.id === user.id && (
+                {data.id === userPlaceholder.id && (
                   <button
                     type="button"
                     className="rounded-full border border-bright-pink bg-transparent py-1.5 px-3.5 text-base font-bold text-white shadow-sm duration-150 ease-in hover:bg-zinc-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bright-pink"
