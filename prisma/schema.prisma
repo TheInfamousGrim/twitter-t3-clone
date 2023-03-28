@@ -26,12 +26,15 @@ model Tweet {
 }
 
 model Like {
-  id      String  @id @default(cuid())
-  Tweet   Tweet?  @relation(fields: [tweetId], references: [id])
-  tweetId String?
+  id      String @id @default(cuid())
+  Tweet   Tweet  @relation(fields: [tweetId], references: [id])
+  tweetId String
+
+  userId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([tweetId])
+  @@index([userId])
 }
