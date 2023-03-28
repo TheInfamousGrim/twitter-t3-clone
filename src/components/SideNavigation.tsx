@@ -28,10 +28,6 @@ export const SideNavigation = () => {
   // Check if the user is signed in
   const { user, isSignedIn, isLoaded } = useUser();
 
-  if (!user || !isSignedIn || !isLoaded || !user.username) {
-    return <div>No user found</div>;
-  }
-
   // Nav Link Data
   const navigationItemsLoggedOut = [
     {
@@ -45,6 +41,51 @@ export const SideNavigation = () => {
       href: '#',
     },
   ];
+
+  /* --------------------------- Unauthorized Navbar -------------------------- */
+  if (!user || !isSignedIn || !isLoaded || !user.username) {
+    return (
+      <header className="fixed top-0 left-0 mr-5 min-w-[68px] p-4 xl:w-72">
+        <nav className="flex h-full flex-col items-center justify-between">
+          <div className="flex flex-col gap-2">
+            <Link
+              href="/"
+              className="w-fit rounded-full p-2 duration-150 ease-in hover:bg-zinc-900"
+            >
+              <TwooterIcon />
+            </Link>
+            {navigationItemsLoggedOut.map((navItem) => {
+              return (
+                <div key={`${navItem.navItemName}-${uuidV4()}`} className="">
+                  <div
+                    className="tooltip tooltip-bottom block xl:hidden"
+                    data-tip={navItem.navItemName}
+                  >
+                    <Link
+                      href={navItem.href}
+                      className="flex w-fit items-center gap-4 rounded-full p-2 duration-150 ease-in hover:bg-zinc-900 xl:pr-6"
+                    >
+                      <navItem.navItemIcon className="h-8 w-8 text-slate-100" />
+                      <p className="sr-only">{navItem.navItemName}</p>
+                    </Link>
+                  </div>
+                  <div className="hidden xl:block">
+                    <Link
+                      href={navItem.href}
+                      className="flex w-fit items-center gap-4 rounded-full p-2 duration-150 ease-in hover:bg-zinc-900 xl:pr-6"
+                    >
+                      <navItem.navItemIcon className="h-8 w-8 text-slate-100" />
+                      <p className="text-xl">{navItem.navItemName}</p>
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </nav>
+      </header>
+    );
+  }
 
   const navigationItemsLoggedIn = [
     {
@@ -84,47 +125,6 @@ export const SideNavigation = () => {
     },
   ];
 
-  if (!isSignedIn) {
-    return (
-      <header className="max-w-3xl p-4">
-        <nav className="flex flex-col gap-2">
-          <a
-            href="#"
-            className="w-fit rounded-full p-2 duration-150 ease-in hover:bg-zinc-900"
-          >
-            <TwooterIcon />
-          </a>
-          {navigationItemsLoggedOut.map((navItem) => {
-            return (
-              <div key={`${navItem.navItemName}-${uuidV4()}`} className="">
-                <div
-                  className="tooltip tooltip-bottom block xl:hidden"
-                  data-tip={navItem.navItemName}
-                >
-                  <a
-                    href="#"
-                    className="flex w-fit items-center gap-4 rounded-full p-2 duration-150 ease-in hover:bg-zinc-900 xl:pr-6"
-                  >
-                    <navItem.navItemIcon className="h-8 w-8 text-slate-100" />
-                    <p className="sr-only">{navItem.navItemName}</p>
-                  </a>
-                </div>
-                <div className="hidden xl:block">
-                  <a
-                    href="#"
-                    className="flex w-fit items-center gap-4 rounded-full p-2 duration-150 ease-in hover:bg-zinc-900 xl:pr-6"
-                  >
-                    <navItem.navItemIcon className="h-8 w-8 text-slate-100" />
-                    <p className="text-xl">{navItem.navItemName}</p>
-                  </a>
-                </div>
-              </div>
-            );
-          })}
-        </nav>
-      </header>
-    );
-  }
   return (
     <>
       <header className="fixed top-0 left-0 min-w-[68px] p-4 xl:w-72">
