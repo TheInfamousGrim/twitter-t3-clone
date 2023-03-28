@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 // Icons
 import { XMarkIcon, GlobeEuropeAfricaIcon } from '@heroicons/react/24/solid';
 import {
+  ArrowLeftIcon,
   FaceSmileIcon,
   ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline';
@@ -79,6 +80,7 @@ export const TweetModal = ({
     setCharCount(e.currentTarget.value.length);
   };
 
+  // Unauthorized tweet modal
   if (!isLoaded || !isSignedIn) {
     return (
       <Transition.Root show={tweetModalOpen} as={Fragment}>
@@ -96,7 +98,7 @@ export const TweetModal = ({
           </Transition.Child>
 
           <div className="fixed inset-0 z-10 overflow-y-auto">
-            <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div className="flex min-h-full justify-center text-center sm:items-center sm:p-0">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -106,47 +108,47 @@ export const TweetModal = ({
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-black px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
-                  <div>
-                    <div className="mb-5 flex flex-col sm:mb-6">
-                      <button
-                        className="tooltip tooltip-bottom rounded-full p-2 hover:bg-zinc-900"
-                        data-tip="Close"
-                        onClick={() => setTweetModalOpen(false)}
-                      >
-                        <XMarkIcon className="h-6 w-6" />
-                        <p className="sr-only">Close</p>
-                      </button>
-                    </div>
-                    <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-                      <ExclamationTriangleIcon
-                        className="h-6 w-6 text-red-600"
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <div className="mt-3 text-center sm:mt-5">
-                      <Dialog.Title
-                        as="h3"
-                        className="text-base font-semibold leading-6 text-gray-900"
-                      >
-                        Looks Like Something went wrong
-                      </Dialog.Title>
-                      <div className="mt-2">
-                        <p className="text-sm text-gray-500">
-                          Lorem ipsum dolor sit amet consectetur adipisicing
-                          elit. Consequatur amet labore.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-5 sm:mt-6">
+                <Dialog.Panel className="relative w-full transform gap-3 bg-black px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-xl sm:rounded-2xl sm:p-6">
+                  <div className="flex justify-between">
                     <button
-                      type="button"
-                      className="inline-flex w-full justify-center rounded-md bg-bright-pink px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                      className="tooltip tooltip-bottom hidden w-fit rounded-full p-2 hover:bg-zinc-900 sm:block"
+                      data-tip="Close"
                       onClick={() => setTweetModalOpen(false)}
                     >
-                      Go back to dashboard
+                      <XMarkIcon className="h-6 w-6" />
+                      <p className="sr-only">Close</p>
                     </button>
+                    <button
+                      className="tooltip tooltip-bottom visible w-fit rounded-full p-2 hover:bg-zinc-900 sm:hidden"
+                      data-tip="Go back"
+                      onClick={() => setTweetModalOpen(false)}
+                    >
+                      <ArrowLeftIcon className="h-6 w-6" />
+                      <p className="sr-only">Close</p>
+                    </button>
+                  </div>
+                  <div className="flex w-full gap-4">
+                    <div className="w-full">
+                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-600 bg-opacity-10">
+                        <ExclamationTriangleIcon
+                          className="h-6 w-6 text-red-600"
+                          aria-hidden="true"
+                        />
+                      </div>
+                      <div className="mt-3 text-center sm:mt-5">
+                        <Dialog.Title
+                          as="h3"
+                          className="text-base font-semibold leading-6"
+                        >
+                          {`Looks like you're not signed in 🥺`}
+                        </Dialog.Title>
+                        <div className="mt-2">
+                          <p className="text-sm text-gray-500">
+                            {`You need to sign in, so that you can tweet`}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

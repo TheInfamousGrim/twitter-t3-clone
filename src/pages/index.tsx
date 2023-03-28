@@ -68,7 +68,19 @@ const Feed = () => {
     );
   }
 
-  if (!data) return <div>Something went wrong</div>;
+  if (!data) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-6 p-6 text-center">
+        <h3>{`Hmmm... Something went wrong getting these twoots, try refreshing?`}</h3>
+        <Link
+          href="/"
+          className="rounded-full bg-bright-pink py-2.5 px-3.5 text-base font-bold text-white shadow-sm hover:bg-pink-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bright-pink"
+        >
+          Home
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[24960px]">

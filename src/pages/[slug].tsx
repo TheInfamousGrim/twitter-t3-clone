@@ -44,7 +44,27 @@ const ProfileFeed = (props: { userId: string }) => {
     );
   }
 
-  if (!data || data.length === 0) return <div>User has not posted</div>;
+  if (!data) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-6 p-6 text-center">
+        <h3>{`Hmmm... These twoots don't seem to exist. Try heading back to the comfort of home or maybe reloading.`}</h3>
+        <Link
+          href="/"
+          className="rounded-full bg-bright-pink py-2.5 px-3.5 text-base font-bold text-white shadow-sm hover:bg-pink-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bright-pink"
+        >
+          Home
+        </Link>
+      </div>
+    );
+  }
+
+  if (data.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-6 p-6 text-center">
+        <p>Looks like this user has not twooted yet</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[24960px]">
@@ -67,14 +87,13 @@ const Profile: NextPage<{ username: string }> = ({ username }) => {
   let userPlaceholder;
   if (!user || !user.id) {
     userPlaceholder = {
-      id: null
-    }
+      id: null,
+    };
   } else {
     userPlaceholder = {
-      id: user.id
-    }
+      id: user.id,
+    };
   }
-
 
   return (
     <>

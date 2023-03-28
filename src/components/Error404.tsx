@@ -12,7 +12,7 @@ import { SideNavigation } from '~/components/SideNavigation';
 import { NewToTwooter } from '~/components/NewToTwooter';
 import { PageLayout } from '~/components/PageLayout';
 
-export default function Custom404() {
+export const Custom404Component = () => {
   const { isSignedIn } = useUser();
 
   return (
@@ -43,4 +43,4 @@ export default function Custom404() {
       {!isSignedIn && <AuthFooter />}
     </>
   );
-}
+};
