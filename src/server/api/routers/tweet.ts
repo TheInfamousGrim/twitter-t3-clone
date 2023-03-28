@@ -7,6 +7,9 @@ import { z } from 'zod';
 import { Ratelimit } from '@upstash/ratelimit'; // for deno: see above
 import { Redis } from '@upstash/redis';
 
+// Helpers
+import { filterUserForClient } from '~/server/helpers/filterUserForClient';
+
 // Create a new rate limiter, 1 request per 10 seconds
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
@@ -21,17 +24,7 @@ import {
 } from '~/server/api/trpc';
 
 // Types
-import type { User } from '@clerk/nextjs/dist/api';
 import type { Tweet } from '@prisma/client';
-
-// Filter out all the user data we don't want reaching the client
-const filterUserForClient = (user: User) => {
-  return {
-    id: user.id,
-    username: user.username,
-    profilePicture: user.profileImageUrl,
-  };
-};
 
 const addUserDataToPosts = async (tweets: Tweet[]) => {
   const userId = tweets.map((tweet) => tweet.authorId);
@@ -41,9 +34,50 @@ const addUserDataToPosts = async (tweets: Tweet[]) => {
       limit: 110,
     })
   ).map(filterUserForClient);
+
+  return tweets.map((tweet) => {
+    const author = users.find((user) => user.id === tweet.authorId);
+
+    if (!author) {
+      console.error('AUTHOR NOT FOUND', tweet);
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Author for post not found. TWEET ID: ${tweet.id}, USER ID: ${tweet.authorId}`,
+      });
+    }
+    if (!author.username) {
+      // user the ExternalUsername
+      if (!author.externalUsername) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: `Author has no GitHub/Discord/Google Account: ${author.id}`,
+        });
+      }
+      author.username = author.externalUsername;
+    }
+    return {
+      tweet,
+      author: {
+        ...author,
+        username: author.username ?? '(username not found)',
+      },
+    };
+  });
 };
 
 export const tweetRouter = createTRPCRouter({
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const tweet = await ctx.prisma.tweet.findUnique({
+        where: { id: input.id },
+      });
+
+      if (!tweet) throw new TRPCError({ code: 'NOT_FOUND' });
+
+      return (await addUserDataToPosts([tweet]))[0];
+    }),
+
   // Get 100 tweets and display them to the home page
   getAll: publicProcedure.query(async ({ ctx }) => {
     const tweets = await ctx.prisma.tweet.findMany({
@@ -75,6 +109,24 @@ export const tweetRouter = createTRPCRouter({
       };
     });
   }),
+
+  getPostByUserId: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) =>
+      ctx.prisma.tweet
+        .findMany({
+          where: {
+            authorId: input.userId,
+          },
+          take: 100,
+          orderBy: [{ createdAt: 'desc' }],
+        })
+        .then(addUserDataToPosts)
+    ),
 
   // Create a new tweet
   create: privateProcedure
