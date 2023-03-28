@@ -1,4 +1,5 @@
 import { useUser, UserButton } from '@clerk/nextjs';
+import Link from 'next/link';
 import { v4 as uuidV4 } from 'uuid';
 import { useState } from 'react';
 
@@ -20,56 +21,70 @@ import { Cog6ToothIcon as Cog6ToothIconOutline } from '@heroicons/react/24/outli
 // Components
 import { TweetModal } from './TweetModal';
 
-const navigationItemsLoggedOut = [
-  {
-    navItemName: 'Explore',
-    navItemIcon: HashtagIcon,
-  },
-  {
-    navItemName: 'Settings',
-    navItemIcon: Cog6ToothIcon,
-  },
-];
-
-const navigationItemsLoggedIn = [
-  {
-    navItemName: 'Home',
-    navItemIcon: HomeIcon,
-  },
-  {
-    navItemName: 'Explore',
-    navItemIcon: HashtagIcon,
-  },
-  {
-    navItemName: 'Notifications',
-    navItemIcon: BellIcon,
-  },
-  {
-    navItemName: 'Messages',
-    navItemIcon: EnvelopeIcon,
-  },
-  {
-    navItemName: 'Bookmarks',
-    navItemIcon: BookmarkIcon,
-  },
-  {
-    navItemName: 'Profile',
-    navItemIcon: UserIcon,
-  },
-  {
-    navItemName: 'More',
-    navItemIcon: EllipsisHorizontalCircleIcon,
-  },
-];
-
 export const SideNavigation = () => {
   // Tweet modal state
   const [tweetModalOpen, setTweetModalOpen] = useState(false);
 
   // Check if the user is signed in
-  const user = useUser();
+  const { user, isSignedIn, isLoaded } = useUser();
 
-  if (!user.isSignedIn) {
+  if (!user || !isSignedIn || !isLoaded || !user.username) {
+    return <div>No user found</div>;
+  }
+
+  // Nav Link Data
+  const navigationItemsLoggedOut = [
+    {
+      navItemName: 'Explore',
+      navItemIcon: HashtagIcon,
+      href: '#',
+    },
+    {
+      navItemName: 'Settings',
+      navItemIcon: Cog6ToothIcon,
+      href: '#',
+    },
+  ];
+
+  const navigationItemsLoggedIn = [
+    {
+      navItemName: 'Home',
+      navItemIcon: HomeIcon,
+      href: '/',
+    },
+    {
+      navItemName: 'Explore',
+      navItemIcon: HashtagIcon,
+      href: '#',
+    },
+    {
+      navItemName: 'Notifications',
+      navItemIcon: BellIcon,
+      href: '#',
+    },
+    {
+      navItemName: 'Messages',
+      navItemIcon: EnvelopeIcon,
+      href: '#',
+    },
+    {
+      navItemName: 'Bookmarks',
+      navItemIcon: BookmarkIcon,
+      href: '#',
+    },
+    {
+      navItemName: 'Profile',
+      navItemIcon: UserIcon,
+      href: `/@${user?.username}`,
+    },
+    {
+      navItemName: 'More',
+      navItemIcon: EllipsisHorizontalCircleIcon,
+      href: '#',
+    },
+  ];
+
+  if (!isSignedIn) {
     return (
       <header className="max-w-3xl p-4">
         <nav className="flex flex-col gap-2">
@@ -115,13 +130,13 @@ export const SideNavigation = () => {
       <header className="fixed top-0 left-0 min-w-[68px] p-4 xl:w-72">
         <nav className="flex h-full flex-col items-center justify-between">
           <div className="flex flex-col gap-2">
-            <a
-              href="#"
+            <Link
+              href="/"
               className="w-fit rounded-full p-2 duration-150 ease-in hover:bg-zinc-900"
             >
               <TwooterIcon />
               <p className="sr-only">Home</p>
-            </a>
+            </Link>
             {navigationItemsLoggedIn.map((navItem) => {
               return (
                 <div key={`${navItem.navItemName}-${uuidV4()}`} className="">
@@ -129,22 +144,22 @@ export const SideNavigation = () => {
                     className="tooltip tooltip-bottom block xl:hidden"
                     data-tip={navItem.navItemName}
                   >
-                    <a
-                      href="#"
+                    <Link
+                      href={navItem.href}
                       className="flex w-fit items-center gap-4 rounded-full p-2 duration-150 ease-in hover:bg-zinc-900"
                     >
                       <navItem.navItemIcon className="h-8 w-8 text-slate-100" />
                       <p className="sr-only">{navItem.navItemName}</p>
-                    </a>
+                    </Link>
                   </div>
                   <div className="hidden xl:block">
-                    <a
-                      href="#"
+                    <Link
+                      href={navItem.href}
                       className="flex w-fit items-center gap-4 rounded-full p-2 duration-150 ease-in hover:bg-zinc-900 xl:pr-6"
                     >
                       <navItem.navItemIcon className="h-8 w-8 text-slate-100" />
                       <p className="text-xl">{navItem.navItemName}</p>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               );
