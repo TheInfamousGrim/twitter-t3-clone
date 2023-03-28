@@ -14,6 +14,7 @@ import { api, type RouterOutputs } from '~/utils/api';
 // Components
 import { AuthFooter } from '~/components/AuthFooter';
 import { LoadingPage, LoadingSpinner } from '~/components/LoadingSpinner';
+import { PageLayout } from '~/components/PageLayout';
 import { SideNavigation } from '~/components/SideNavigation';
 import { NewToTwooter } from '~/components/NewToTwooter';
 
@@ -172,13 +173,11 @@ const Home: NextPage = () => {
       </Head>
       <div className="flex justify-center">
         <SideNavigation />
-        <main className="ml-20 flex h-full grow flex-col overscroll-none sm:ml-0 md:grow-0">
-          <section className="h-full w-full max-w-[600px] border-x border-zinc-800 md:w-[600px]">
-            <h2 className="sr-only">Twooter Feed</h2>
-            <Feed />
-          </section>
-          {!isSignedIn && <NewToTwooter />}
-        </main>
+        <PageLayout>
+          <h2 className="sr-only">Twooter Feed</h2>
+          <Feed />
+        </PageLayout>
+        {!isSignedIn && <NewToTwooter />}
       </div>
       {!isSignedIn && <AuthFooter />}
     </>

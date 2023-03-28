@@ -16,6 +16,7 @@ import { AuthFooter } from '~/components/AuthFooter';
 import { LoadingPage, LoadingSpinner } from '~/components/LoadingSpinner';
 import { SideNavigation } from '~/components/SideNavigation';
 import { NewToTwooter } from '~/components/NewToTwooter';
+import { PageLayout } from '~/components/PageLayout';
 
 const Twoot: NextPage = () => {
   const { isLoaded: userLoaded, isSignedIn } = useUser();
@@ -35,13 +36,11 @@ const Twoot: NextPage = () => {
       </Head>
       <div className="flex h-full justify-center">
         <SideNavigation />
-        <main className="sm:ls-0 ml-20 flex min-h-[24960px] grow overscroll-none md:grow-0">
-          <section className="h-full w-full max-w-[600px] border-x border-zinc-800 md:w-[600px]">
-            <h2 className="sr-only">Twooter Feed</h2>
-            <div>Twoot view</div>
-          </section>
-          {!isSignedIn && <NewToTwooter />}
-        </main>
+        <PageLayout>
+          <h2 className="sr-only">Twooter Feed</h2>
+          <div>Twoot view</div>
+        </PageLayout>
+        {!isSignedIn && <NewToTwooter />}
       </div>
       {!isSignedIn && <AuthFooter />}
     </>
