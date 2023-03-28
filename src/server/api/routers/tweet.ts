@@ -7,6 +7,9 @@ import { z } from 'zod';
 import { Ratelimit } from '@upstash/ratelimit'; // for deno: see above
 import { Redis } from '@upstash/redis';
 
+// Helpers
+import { filterUserForClient } from '~/server/helpers/filterUserForClient';
+
 // Create a new rate limiter, 1 request per 10 seconds
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
@@ -21,17 +24,7 @@ import {
 } from '~/server/api/trpc';
 
 // Types
-import type { User } from '@clerk/nextjs/dist/api';
 import type { Tweet } from '@prisma/client';
-
-// Filter out all the user data we don't want reaching the client
-const filterUserForClient = (user: User) => {
-  return {
-    id: user.id,
-    username: user.username,
-    profilePicture: user.profileImageUrl,
-  };
-};
 
 const addUserDataToPosts = async (tweets: Tweet[]) => {
   const userId = tweets.map((tweet) => tweet.authorId);

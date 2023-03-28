@@ -63,7 +63,7 @@ const TweetView = (props: TweetWithUser) => {
   const { tweet, author } = props;
   const formattedDate = dayjs(tweet.createdAt).format('MMM D YYYY HH:mm');
 
-  if (!author || !author.profilePicture || !author.username) {
+  if (!author || !author.profileImageUrl || !author.username) {
     return (
       <div>
         <p>{`Couldn't load tweet`}</p>
@@ -85,7 +85,7 @@ const TweetView = (props: TweetWithUser) => {
           <div className="h-[40px] w-[40px]">
             <Link href={`/@${author.username}`}>
               <Image
-                src={author?.profilePicture}
+                src={author.profileImageUrl}
                 width={100}
                 height={100}
                 className="rounded-full duration-150 ease-in hover:cursor-pointer hover:bg-gray-50 hover:bg-opacity-10"
