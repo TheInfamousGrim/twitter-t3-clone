@@ -12,7 +12,7 @@ dayjs.extend(customParseFormat);
 import type { GetStaticProps } from 'next';
 
 // API
-import { api, type RouterOutputs } from '~/utils/api';
+import { api } from '~/utils/api';
 
 // SSG Helper
 import { generateSSGHelper } from '~/server/helpers/ssgHelper';
@@ -22,13 +22,38 @@ import { CldImage } from 'next-cloudinary';
 
 // Components
 import { AuthFooter } from '~/components/AuthFooter';
-import { LoadingPage, LoadingSpinner } from '~/components/LoadingSpinner';
-import { SideNavigation } from '~/components/SideNavigation';
+import { LoadingSpinner } from '~/components/LoadingSpinner';
 import { NewToTwooter } from '~/components/NewToTwooter';
 import { PageLayout } from '~/components/PageLayout';
+import { SideNavigation } from '~/components/SideNavigation';
+import { TweetView } from '~/components/TweetView';
 
 // Icons
 import { CalendarDaysIcon } from '@heroicons/react/20/solid';
+
+const ProfileFeed = (props: { userId: string }) => {
+  const { data, isLoading } = api.tweet.getPostByUserId.useQuery({
+    userId: props.userId,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-start justify-center pt-4">
+        <LoadingSpinner size={40} />
+      </div>
+    );
+  }
+
+  if (!data || data.length === 0) return <div>User has not posted</div>;
+
+  return (
+    <div className="min-h-[24960px]">
+      {[...data]?.map((fullTweet) => (
+        <TweetView {...fullTweet} key={fullTweet.tweet.id} />
+      ))}
+    </div>
+  );
+};
 
 const Profile: NextPage<{ username: string }> = ({ username }) => {
   const { isLoaded: userLoaded, isSignedIn, user } = useUser();
@@ -103,6 +128,9 @@ const Profile: NextPage<{ username: string }> = ({ username }) => {
             </div>
             {isLoading && <LoadingSpinner size={60} />}
           </article>
+          <section>
+            <ProfileFeed userId={data.id} />
+          </section>
         </PageLayout>
         {!isSignedIn && <NewToTwooter />}
       </div>

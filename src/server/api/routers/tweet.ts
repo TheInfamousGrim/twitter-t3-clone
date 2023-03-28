@@ -34,6 +34,35 @@ const addUserDataToPosts = async (tweets: Tweet[]) => {
       limit: 110,
     })
   ).map(filterUserForClient);
+
+  return tweets.map((tweet) => {
+    const author = users.find((user) => user.id === tweet.authorId);
+
+    if (!author) {
+      console.error('AUTHOR NOT FOUND', tweet);
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: `Author for post not found. TWEET ID: ${tweet.id}, USER ID: ${tweet.authorId}`,
+      });
+    }
+    if (!author.username) {
+      // user the ExternalUsername
+      if (!author.externalUsername) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: `Author has no GitHub/Discord/Google Account: ${author.id}`,
+        });
+      }
+      author.username = author.externalUsername;
+    }
+    return {
+      tweet,
+      author: {
+        ...author,
+        username: author.username ?? '(username not found)',
+      },
+    };
+  });
 };
 
 export const tweetRouter = createTRPCRouter({
@@ -68,6 +97,24 @@ export const tweetRouter = createTRPCRouter({
       };
     });
   }),
+
+  getPostByUserId: publicProcedure
+    .input(
+      z.object({
+        userId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) =>
+      ctx.prisma.tweet
+        .findMany({
+          where: {
+            authorId: input.userId,
+          },
+          take: 100,
+          orderBy: [{ createdAt: 'desc' }],
+        })
+        .then(addUserDataToPosts)
+    ),
 
   // Create a new tweet
   create: privateProcedure
