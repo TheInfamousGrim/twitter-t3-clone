@@ -18,6 +18,7 @@ import { api, type RouterOutputs } from '~/utils/api';
 
 // Components
 import { AuthFooter } from '~/components/AuthFooter';
+import { Custom404Component } from '~/components/Error404';
 import { LoadingPage, LoadingSpinner } from '~/components/LoadingSpinner';
 import { SideNavigation } from '~/components/SideNavigation';
 import { NewToTwooter } from '~/components/NewToTwooter';
@@ -29,15 +30,14 @@ const Twoot: NextPage<{ id: string }> = ({ id }) => {
   const { data } = api.tweet.getById.useQuery({
     id,
   });
-  if (!data) return <div>404</div>;
-
-  // Return an empty div if there is no user
-  if (!userLoaded) return <div />;
+  if (!data) {
+    return <Custom404Component />
+  }
 
   return (
     <>
       <Head>
-        <title>Twooter | Twoot</title>
+        <title>{`Twooter | Twoot - ${data.tweet.id}`}</title>
         <meta
           name="description"
           content="A delightful twitter clone made using the awesome t3 stack"

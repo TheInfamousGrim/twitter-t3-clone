@@ -1,8 +1,34 @@
+// Dependencies
 import Link from 'next/link';
 import Image from 'next/image';
+import DOMPurify from 'dompurify';
+
+// Dayjs
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import updateLocal from 'dayjs/plugin/updateLocale';
 dayjs.extend(customParseFormat);
+dayjs.extend(updateLocal);
+dayjs.extend(relativeTime);
+
+dayjs.updateLocale('en', {
+  relativeTime: {
+    future: 'in %s',
+    past: '%s',
+    s: '1m',
+    m: '1m',
+    mm: '%dm',
+    h: '1h',
+    hh: '%dh',
+    d: '1d',
+    dd: '%dd',
+    M: '1M',
+    MM: '%dM',
+    y: '1y',
+    yy: '%dy',
+  },
+});
 
 // Icons
 import {
@@ -50,15 +76,21 @@ type TweetWithUser = RouterOutputs['tweet']['getAll'][number];
 
 export const TweetView = (props: TweetWithUser) => {
   const { tweet, author } = props;
-  const formattedDate = dayjs(tweet.createdAt).format('MMM D YYYY HH:mm');
+  const formattedDate = dayjs(tweet.createdAt).format('MMM-D-YYYY HH:mm');
 
   if (!author || !author.profileImageUrl || !author.username) {
     return (
-      <div>
-        <p>{`Couldn't load tweet`}</p>
+      <div className="border-b border-zinc-800">
+        <div className="flex w-full items-center justify-center p-4">
+          <p>{`Couldn't load tweet`}</p>
+        </div>
       </div>
     );
   }
+
+  // Sanitize tweet
+  const cleanTweet = DOMPurify.sanitize(tweet.text);
+
   return (
     <>
       <div className="hidden hover:bg-sky-500 hover:bg-green-500 hover:bg-bright-pink hover:text-sky-500 hover:text-bright-pink hover:text-green-500"></div>
@@ -92,9 +124,12 @@ export const TweetView = (props: TweetWithUser) => {
               <time
                 dateTime={`${formattedDate}`}
                 className="text-zinc-400"
-              >{`· ${formattedDate}`}</time>
+              >{`· ${dayjs(tweet.createdAt).fromNow()}`}</time>
             </div>
-            <div className="mt-1">{tweet.text}</div>
+            <div
+              className="mt-1 [&>p]:leading-tight"
+              dangerouslySetInnerHTML={{ __html: cleanTweet }}
+            />
             <div className="mt-1 flex justify-between">
               {tweetButtonData.map((buttonData, index) => {
                 return (

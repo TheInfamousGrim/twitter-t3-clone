@@ -110,6 +110,7 @@ export const tweetRouter = createTRPCRouter({
     });
   }),
 
+  // Get a list of tweets by user id
   getPostByUserId: publicProcedure
     .input(
       z.object({
