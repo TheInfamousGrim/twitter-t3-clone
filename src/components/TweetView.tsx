@@ -139,7 +139,6 @@ export const TweetView = (props: TweetWithUser) => {
                     data-tip={buttonData.name}
                     onClick={(e) => {
                       e.preventDefault();
-                      console.log('clicked');
                     }}
                   >
                     <buttonData.icon

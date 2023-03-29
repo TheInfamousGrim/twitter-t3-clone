@@ -46,11 +46,11 @@ const addUserDataToPosts = async (tweets: Tweet[]) => {
       });
     }
     if (!author.username) {
-      // user the ExternalUsername
+      // use the ExternalUsername
       if (!author.externalUsername) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: `Author has no GitHub/Discord/Google Account: ${author.id}`,
+          message: `Author has no GitHub/Discord: ${author.id}`,
         });
       }
       author.username = author.externalUsername;

@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import { useEditor, EditorContent } from '@tiptap/react';
+import HardBreak from '@tiptap/extension-hard-break';
 import { useUser } from '@clerk/nextjs';
 import {
   useForm,
@@ -59,6 +60,13 @@ const TweetRichTextEditor = (props: {
     },
     extensions: [
       StarterKit,
+      HardBreak.extend({
+        addKeyboardShortcuts() {
+          return {
+            Enter: () => this.editor.commands.setHardBreak(),
+          };
+        },
+      }),
       Placeholder.configure({
         emptyEditorClass:
           'text-zinc-500 before:content-[attr(data-placeholder)] float-left h-0 pointer-events-none',
@@ -121,8 +129,6 @@ export const TweetModal = ({
       }
     },
   });
-
-  console.log(getValues());
 
   // On Submit handler
   const onTweetSubmit = (data: TweetData) => {
@@ -292,7 +298,7 @@ export const TweetModal = ({
                         src={user.profileImageUrl}
                         height={48}
                         width={48}
-                        className="h-12 w-12"
+                        className="h-12 w-12 rounded-full"
                         alt={user.username ?? 'User profile img'}
                       />
                     </div>

@@ -94,7 +94,8 @@ const Profile: NextPage<{ username: string }> = ({ username }) => {
       id: user.id,
     };
   }
-  console.log(data);
+
+  console.log(user);
 
   return (
     <>

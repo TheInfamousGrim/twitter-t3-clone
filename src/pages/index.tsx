@@ -96,6 +96,7 @@ const Home: NextPage = () => {
 
   // Return an empty div if there is no user
   if (!userLoaded) return <div />;
+  console.log(isSignedIn);
 
   return (
     <>

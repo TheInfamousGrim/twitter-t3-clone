@@ -41,6 +41,7 @@ export const SideNavigation = () => {
       href: '#',
     },
   ];
+  console.log(user);
 
   /* --------------------------- Unauthorized Navbar -------------------------- */
   if (!user || !isSignedIn || !isLoaded || !user.username) {
