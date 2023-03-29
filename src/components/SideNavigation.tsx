@@ -172,12 +172,20 @@ export const SideNavigation = () => {
               <PencilSquareIcon className="h-8 w-8" />
             </button>
           </div>
-          <div
-            className="tooltip tooltip-top mb-4 mt-6 flex justify-center rounded-full p-2 duration-150 ease-in hover:bg-zinc-900 xl:w-48 xl:justify-start"
-            data-tip="Account"
-          >
-            <UserButton />
-          </div>
+          <UserButton
+            showName={true}
+            appearance={{
+              elements: {
+                rootBox: 'xl:w-[192px]',
+                userButtonBox:
+                  'flex-row-reverse mt-2 justify-start xl:justify-end w-full',
+                userButtonOuterIdentifier:
+                  'text-white font-bold text-lg hidden xl:block',
+                userButtonTrigger:
+                  'tooltip tooltip-top rounded-full p-2 duration-150 ease-in hover:bg-zinc-900',
+              },
+            }}
+          />
         </nav>
       </header>
       <TweetModal

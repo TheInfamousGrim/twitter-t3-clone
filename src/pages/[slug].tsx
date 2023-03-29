@@ -29,7 +29,7 @@ import { SideNavigation } from '~/components/SideNavigation';
 import { TweetView } from '~/components/TweetView';
 
 // Icons
-import { CalendarDaysIcon } from '@heroicons/react/20/solid';
+import { CalendarDaysIcon, ArrowLeftIcon } from '@heroicons/react/20/solid';
 
 const ProfileFeed = (props: { userId: string }) => {
   const { data, isLoading } = api.tweet.getPostByUserId.useQuery({
@@ -94,6 +94,7 @@ const Profile: NextPage<{ username: string }> = ({ username }) => {
       id: user.id,
     };
   }
+  console.log(data);
 
   return (
     <>
@@ -108,9 +109,27 @@ const Profile: NextPage<{ username: string }> = ({ username }) => {
       <div className="flex h-full justify-center">
         <SideNavigation />
         <PageLayout>
-          <h2 className="sr-only">Twooter Feed</h2>
-          <article className="w-full border-b border-zinc-800" role="article">
-            <h2 className="sr-only">{`${username}'s profile information`}</h2>
+          <div className="sticky inset-0 z-20 bg-[#00000033] backdrop-blur-sm">
+            <div className="flex items-center justify-start gap-4 px-4 py-2">
+              <Link
+                href="/"
+                className="tooltip tooltip-bottom rounded-full p-2 duration-150 ease-in hover:bg-gray-50 hover:bg-opacity-10"
+                data-tip="Back"
+              >
+                <ArrowLeftIcon className="h-6 w-6 text-zinc-200" />
+              </Link>
+              <div className="">
+                <h3 className="t text-lg font-bold">{data.username}</h3>
+                <p></p>
+              </div>
+            </div>
+          </div>
+          <h1 className="sr-only">Twooter Feed</h1>
+          <article
+            className="relative w-full border-b border-zinc-800"
+            role="article"
+          >
+            <h2 className="sr-only">{`${data.username}'s profile information`}</h2>
             <div className="h-52 w-full">
               <CldImage
                 src="https://res.cloudinary.com/dmh1rwpa1/image/upload/v1679966852/Twooter/Profiles/pixel-jeff-clipa_ya0e9u.gif"

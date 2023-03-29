@@ -16,7 +16,7 @@ model Tweet {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  text String @db.VarChar(280)
+  text String @db.Text
 
   authorId String
 

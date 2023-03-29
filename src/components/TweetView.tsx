@@ -1,5 +1,7 @@
+// Dependencies
 import Link from 'next/link';
 import Image from 'next/image';
+import DOMPurify from 'dompurify';
 
 // Dayjs
 import dayjs from 'dayjs';
@@ -79,12 +81,16 @@ export const TweetView = (props: TweetWithUser) => {
   if (!author || !author.profileImageUrl || !author.username) {
     return (
       <div className="border-b border-zinc-800">
-        <div className="w-full p-4">
+        <div className="flex w-full items-center justify-center p-4">
           <p>{`Couldn't load tweet`}</p>
         </div>
       </div>
     );
   }
+
+  // Sanitize tweet
+  const cleanTweet = DOMPurify.sanitize(tweet.text);
+
   return (
     <>
       <div className="hidden hover:bg-sky-500 hover:bg-green-500 hover:bg-bright-pink hover:text-sky-500 hover:text-bright-pink hover:text-green-500"></div>
@@ -120,7 +126,10 @@ export const TweetView = (props: TweetWithUser) => {
                 className="text-zinc-400"
               >{`· ${dayjs(tweet.createdAt).fromNow()}`}</time>
             </div>
-            <div className="mt-1">{tweet.text}</div>
+            <div
+              className="mt-1 [&>p]:leading-tight"
+              dangerouslySetInnerHTML={{ __html: cleanTweet }}
+            />
             <div className="mt-1 flex justify-between">
               {tweetButtonData.map((buttonData, index) => {
                 return (
