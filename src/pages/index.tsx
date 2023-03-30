@@ -72,12 +72,12 @@ const Feed = () => {
 
   const tweets = data?.pages.flatMap((page) => page.tweetsWithUsers) ?? [];
 
-  useEffect(() => {
-    console.log('running');
-    if (scrollPosition > 90 && hasNextPage && !isFetching) {
-      fetchNextPage();
-    }
-  }, [scrollPosition, hasNextPage, isFetching, fetchNextPage]);
+  // useEffect(() => {
+  //   console.log('running');
+  //   if (scrollPosition > 90 && hasNextPage && !isFetching) {
+  //     fetchNextPage();
+  //   }
+  // }, [scrollPosition, hasNextPage, isFetching, fetchNextPage]);
 
   if (tweetsLoading) {
     return (
