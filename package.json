@@ -16,6 +16,7 @@
     "@heroicons/react": "^2.0.16",
     "@prisma/client": "^4.9.0",
     "@tanstack/react-query": "^4.20.2",
+    "@tiptap/extension-hard-break": "^2.0.0-beta.220",
     "@tiptap/extension-placeholder": "^2.0.0-beta.220",
     "@tiptap/pm": "^2.0.0-beta.220",
     "@tiptap/react": "^2.0.0-beta.220",
@@ -44,6 +45,7 @@
     "zod": "^3.20.6"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.9",
     "@types/eslint": "^8.21.1",

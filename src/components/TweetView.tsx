@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import DOMPurify from 'dompurify';
+import { useRouter } from 'next/router';
 
 // Dayjs
 import dayjs from 'dayjs';
@@ -69,14 +70,34 @@ const tweetButtonData = [
 ];
 
 // API
-import { api, type RouterOutputs } from '~/utils/api';
+import { api, type RouterOutputs, type RouterInputs } from '~/utils/api';
+import { MouseEventHandler } from 'react';
 
 //Types
-type TweetWithUser = RouterOutputs['tweet']['getAll'][number];
+type TweetWithUser = {
+  tweetData: RouterOutputs['tweet']['getAll']['tweetsWithUsers'][number];
+  input: RouterInputs['tweet']['getAll'];
+};
 
 export const TweetView = (props: TweetWithUser) => {
-  const { tweet, author } = props;
+  const { tweet } = props.tweetData;
+  const { author } = props.tweetData;
   const formattedDate = dayjs(tweet.createdAt).format('MMM-D-YYYY HH:mm');
+
+  // Router
+  const router = useRouter();
+
+  // Handle user link
+  const handleUserRoute = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!author || !author.username) {
+      return router.push('/404');
+    }
+
+    await router.push(`/@${author.username}`);
+  };
 
   if (!author || !author.profileImageUrl || !author.username) {
     return (
@@ -104,7 +125,11 @@ export const TweetView = (props: TweetWithUser) => {
           className="flex gap-4 p-4 hover:bg-gray-50 hover:bg-opacity-5"
         >
           <div className="h-[40px] w-[40px]">
-            <Link href={`/@${author.username}`}>
+            <button
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                handleUserRoute(e)
+              }
+            >
               <Image
                 src={author.profileImageUrl}
                 width={100}
@@ -112,15 +137,20 @@ export const TweetView = (props: TweetWithUser) => {
                 className="rounded-full duration-150 ease-in hover:cursor-pointer hover:bg-gray-50 hover:bg-opacity-10"
                 alt={`@${author?.username}'s profile picture`}
               />
-            </Link>
+            </button>
           </div>
           <div className="w-full">
             <div className="flex gap-2">
-              <Link href={`/@${author.username}`} className="">
+              <button
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                  handleUserRoute(e)
+                }
+                className=""
+              >
                 <address className="font-bold not-italic text-gray-50 hover:underline hover:decoration-2">
                   {author?.username}
                 </address>
-              </Link>
+              </button>
               <time
                 dateTime={`${formattedDate}`}
                 className="text-zinc-400"
@@ -139,7 +169,6 @@ export const TweetView = (props: TweetWithUser) => {
                     data-tip={buttonData.name}
                     onClick={(e) => {
                       e.preventDefault();
-                      console.log('clicked');
                     }}
                   >
                     <buttonData.icon

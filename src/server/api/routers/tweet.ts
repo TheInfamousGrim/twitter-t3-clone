@@ -46,11 +46,11 @@ const addUserDataToPosts = async (tweets: Tweet[]) => {
       });
     }
     if (!author.username) {
-      // user the ExternalUsername
+      // use the ExternalUsername
       if (!author.externalUsername) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: `Author has no GitHub/Discord/Google Account: ${author.id}`,
+          message: `Author has no GitHub/Discord: ${author.id}`,
         });
       }
       author.username = author.externalUsername;
@@ -79,36 +79,61 @@ export const tweetRouter = createTRPCRouter({
     }),
 
   // Get 100 tweets and display them to the home page
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    const tweets = await ctx.prisma.tweet.findMany({
-      take: 100,
-      orderBy: [{ createdAt: 'desc' }],
-    });
-
-    const users = (
-      await clerkClient.users.getUserList({
-        userId: tweets.map((tweet) => tweet.authorId),
-        limit: 100,
+  getAll: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.string().nullish(),
       })
-    ).map(filterUserForClient);
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = input.limit ?? 50;
+      const { cursor } = input;
 
-    return tweets.map((tweet) => {
-      const author = users.find((user) => user.id === tweet.authorId);
+      const tweets = await ctx.prisma.tweet.findMany({
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: [{ createdAt: 'desc' }],
+      });
 
-      if (!author) {
-        console.error('AUTHOR NOT FOUND', tweet);
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: `Author for post not found. POST ID: ${tweet.id}, USER_ID: ${tweet.authorId}`,
-        });
+      // create the cursor for pagination
+      let nextCursor: typeof cursor | undefined = undefined;
+
+      // Check that the length of the tweets is not greater than the limit
+      if (tweets.length > limit) {
+        // if it is remove the tweets at the end
+        const nextItem = tweets.pop() as (typeof tweets)[number];
+        nextCursor = nextItem.id;
       }
 
+      const users = (
+        await clerkClient.users.getUserList({
+          userId: tweets.map((tweet) => tweet.authorId),
+          limit: 100,
+        })
+      ).map(filterUserForClient);
+
+      const tweetsWithUsers = tweets.map((tweet) => {
+        const author = users.find((user) => user.id === tweet.authorId);
+
+        if (!author) {
+          console.error('AUTHOR NOT FOUND', tweet);
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: `Author for post not found. POST ID: ${tweet.id}, USER_ID: ${tweet.authorId}`,
+          });
+        }
+
+        return {
+          tweet,
+          author: users.find((user) => user.id === tweet.authorId),
+        };
+      });
       return {
-        tweet,
-        author: users.find((user) => user.id === tweet.authorId),
+        tweetsWithUsers,
+        nextCursor,
       };
-    });
-  }),
+    }),
 
   // Get a list of tweets by user id
   getPostByUserId: publicProcedure

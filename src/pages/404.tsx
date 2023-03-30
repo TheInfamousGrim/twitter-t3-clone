@@ -28,7 +28,7 @@ export default function Custom404() {
       <div className="flex h-full justify-center">
         <SideNavigation />
         <PageLayout>
-          <div className="flex flex-col items-center justify-center gap-6 p-6 text-center">
+          <div className="flex h-screen flex-col items-center justify-center gap-6 p-6 text-center">
             <h3>{`Hmmm... this page doesn't exist in this dimension. Try heading back to the comfort of home.`}</h3>
             <Link
               href="/"

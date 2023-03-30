@@ -24,6 +24,7 @@ import { SideNavigation } from '~/components/SideNavigation';
 import { NewToTwooter } from '~/components/NewToTwooter';
 import { PageLayout } from '~/components/PageLayout';
 import { TweetView } from '~/components/TweetView';
+import { ContactFooter } from '~/components/ContactFooter';
 
 const Twoot: NextPage<{ id: string }> = ({ id }) => {
   const { isLoaded: userLoaded, isSignedIn } = useUser();
@@ -31,7 +32,7 @@ const Twoot: NextPage<{ id: string }> = ({ id }) => {
     id,
   });
   if (!data) {
-    return <Custom404Component />
+    return <Custom404Component />;
   }
 
   return (
@@ -47,9 +48,13 @@ const Twoot: NextPage<{ id: string }> = ({ id }) => {
       <div className="flex h-full justify-center">
         <SideNavigation />
         <PageLayout>
-          <TweetView {...data} />
+          <TweetView tweetData={{ ...data }} input={{ limit: 10 }} />
+          <div className="h-screen p-4 font-bold text-gray-50">
+            <h3>Look at all the space</h3>
+          </div>
         </PageLayout>
         {!isSignedIn && <NewToTwooter />}
+        {isSignedIn && <ContactFooter />}
       </div>
       {!isSignedIn && <AuthFooter />}
     </>

@@ -2,7 +2,7 @@ import { SignInButton, SignUpButton } from '@clerk/nextjs';
 
 export const AuthFooter = () => {
   return (
-    <footer className="fixed right-0 left-0 bottom-0 flex justify-center bg-bright-pink py-4 px-10 text-gray-100 sm:justify-between ">
+    <footer className="fixed right-0 left-0 bottom-0 z-10 flex justify-center bg-bright-pink py-4 px-10 text-gray-100 sm:justify-between ">
       <div className="ml- hidden sm:block">
         <h3 className="text-2xl font-bold">{`Don't miss what's happening`}</h3>
         <p>{`People on Twitter are the first to know`}</p>

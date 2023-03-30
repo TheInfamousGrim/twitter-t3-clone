@@ -30,6 +30,8 @@ import { TweetView } from '~/components/TweetView';
 
 // Icons
 import { CalendarDaysIcon, ArrowLeftIcon } from '@heroicons/react/20/solid';
+import { ContactFooter } from '~/components/ContactFooter';
+import { EndOfFeed } from '~/components/EndOfFeed';
 
 const ProfileFeed = (props: { userId: string }) => {
   const { data, isLoading } = api.tweet.getPostByUserId.useQuery({
@@ -67,9 +69,13 @@ const ProfileFeed = (props: { userId: string }) => {
   }
 
   return (
-    <div className="min-h-[24960px]">
+    <div className="h-full">
       {[...data]?.map((fullTweet) => (
-        <TweetView {...fullTweet} key={fullTweet.tweet.id} />
+        <TweetView
+          tweetData={{ ...fullTweet }}
+          key={fullTweet.tweet.id}
+          input={{ limit: 10 }}
+        />
       ))}
     </div>
   );
@@ -94,7 +100,6 @@ const Profile: NextPage<{ username: string }> = ({ username }) => {
       id: user.id,
     };
   }
-  console.log(data);
 
   return (
     <>
@@ -175,11 +180,13 @@ const Profile: NextPage<{ username: string }> = ({ username }) => {
           </article>
           <section>
             <ProfileFeed userId={data.id} />
+            {!isLoading && <EndOfFeed />}
           </section>
         </PageLayout>
         {!isSignedIn && <NewToTwooter />}
       </div>
       {!isSignedIn && <AuthFooter />}
+      {isSignedIn && <ContactFooter />}
     </>
   );
 };
