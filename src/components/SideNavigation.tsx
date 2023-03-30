@@ -41,12 +41,11 @@ export const SideNavigation = () => {
       href: '#',
     },
   ];
-  console.log(user);
 
   /* --------------------------- Unauthorized Navbar -------------------------- */
   if (!user || !isSignedIn || !isLoaded || !user.username) {
     return (
-      <header className="fixed top-0 left-0 mr-5 min-w-[68px] p-4 xl:w-72">
+      <header className="fixed top-0 left-0 mr-5 min-w-[68px]  p-4 xl:w-72">
         <nav className="flex h-full flex-col items-center justify-between">
           <div className="flex flex-col gap-2">
             <Link

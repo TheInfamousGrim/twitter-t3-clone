@@ -90,7 +90,7 @@ export const TweetModal = ({
     mode: 'onChange',
     defaultValues: { text: '' },
   });
-  const { control, handleSubmit, getValues, reset } = form;
+  const { control, handleSubmit, reset } = form;
 
   // Input for the tweet
   const [charCount, setCharCount] = useState(0);
