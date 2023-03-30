@@ -1,5 +1,7 @@
 # Create T3 App
 
+[Link to live application](https://twitter-t3-clone-a1cn.vercel.app/)
+
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
 ## What's next? How do I make an app with this?
