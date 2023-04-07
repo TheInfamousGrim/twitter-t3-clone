@@ -114,7 +114,7 @@ const Profile: NextPage<{ username: string }> = ({ username }) => {
       <div className="flex h-full justify-center">
         <SideNavigation />
         <PageLayout>
-          <div className="sticky inset-0 bg-[#00000033] backdrop-blur-sm">
+          <div className="sticky inset-0 z-10 bg-[#00000033] backdrop-blur-sm">
             <div className="flex items-center justify-start gap-4 px-4 py-2">
               <Link
                 href="/"

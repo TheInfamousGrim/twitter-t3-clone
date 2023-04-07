@@ -166,7 +166,7 @@ export const TweetView = (props: TweetWithUser) => {
                 return (
                   <button
                     key={`${buttonData.name}-${index}`}
-                    className={`tooltip tooltip-bottom z-10 rounded-full p-2 duration-150 hover:text-${buttonData.hoverColor} ease-in hover:bg-${buttonData.hoverColor} hover:bg-opacity-10`}
+                    className={`tooltip tooltip-bottom rounded-full p-2 duration-150 hover:text-${buttonData.hoverColor} ease-in hover:bg-${buttonData.hoverColor} hover:bg-opacity-10`}
                     data-tip={buttonData.name}
                     onClick={(e) => {
                       e.preventDefault();
