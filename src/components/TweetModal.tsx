@@ -1,7 +1,7 @@
 // Dependencies
 import clsx from 'clsx';
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useState } from 'react';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
 import StarterKit from '@tiptap/starter-kit';
@@ -9,13 +9,7 @@ import Placeholder from '@tiptap/extension-placeholder';
 import { useEditor, EditorContent } from '@tiptap/react';
 import HardBreak from '@tiptap/extension-hard-break';
 import { useUser } from '@clerk/nextjs';
-import {
-  useForm,
-  SubmitHandler,
-  useController,
-  Controller,
-  useFormState,
-} from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 
 // Icons
 import { XMarkIcon, GlobeEuropeAfricaIcon } from '@heroicons/react/24/solid';
@@ -166,7 +160,7 @@ export const TweetModal = ({
   if (!isLoaded || !isSignedIn) {
     return (
       <Transition.Root show={tweetModalOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={setTweetModalOpen}>
+        <Dialog as="div" className="relative" onClose={setTweetModalOpen}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"

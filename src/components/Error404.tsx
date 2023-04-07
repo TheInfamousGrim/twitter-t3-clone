@@ -2,9 +2,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { useUser } from '@clerk/nextjs';
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
 
 // Components
 import { AuthFooter } from '~/components/AuthFooter';
