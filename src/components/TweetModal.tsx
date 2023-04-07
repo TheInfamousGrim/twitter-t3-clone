@@ -4,10 +4,14 @@ import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
-import StarterKit from '@tiptap/starter-kit';
-import Placeholder from '@tiptap/extension-placeholder';
-import { useEditor, EditorContent } from '@tiptap/react';
+// Tiptap rich text editor
+import Document from '@tiptap/extension-document';
 import HardBreak from '@tiptap/extension-hard-break';
+import Paragraph from '@tiptap/extension-paragraph';
+import Placeholder from '@tiptap/extension-placeholder';
+import StarterKit from '@tiptap/starter-kit';
+import Text from '@tiptap/extension-text';
+import { useEditor, EditorContent } from '@tiptap/react';
 import { useUser } from '@clerk/nextjs';
 import { useForm, Controller } from 'react-hook-form';
 
@@ -54,13 +58,16 @@ const TweetRichTextEditor = (props: {
     },
     extensions: [
       StarterKit,
-      HardBreak.extend({
-        addKeyboardShortcuts() {
-          return {
-            Enter: () => this.editor.commands.setHardBreak(),
-          };
-        },
-      }),
+      Text,
+      Document,
+      Paragraph,
+      // HardBreak.extend({
+      //   addKeyboardShortcuts() {
+      //     return {
+      //       Enter: () => this.editor.commands.setHardBreak(),
+      //     };
+      //   },
+      // }),
       Placeholder.configure({
         emptyEditorClass:
           'text-zinc-500 before:content-[attr(data-placeholder)] float-left h-0 pointer-events-none',

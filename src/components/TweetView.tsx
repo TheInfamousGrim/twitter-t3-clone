@@ -138,7 +138,7 @@ export const TweetView = (props: TweetWithUser) => {
               />
             </button>
           </div>
-          <div className="h-auto w-full">
+          <div className="w-full">
             <div className="flex gap-2">
               <button
                 onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
@@ -155,8 +155,11 @@ export const TweetView = (props: TweetWithUser) => {
                 className="text-zinc-400"
               >{`· ${dayjs(tweet.createdAt).fromNow()}`}</time>
             </div>
-            <div className="mt-1 h-auto max-w-lg [&>p]:leading-tight">
-              <span dangerouslySetInnerHTML={{ __html: cleanTweet }}></span>
+            <div className="mt-1 sm:max-w-lg">
+              <span
+                dangerouslySetInnerHTML={{ __html: cleanTweet }}
+                className="h-auto break-words break-all [&>p]:leading-tight"
+              ></span>
             </div>
             <div className="mt-1 flex justify-between">
               {tweetButtonData.map((buttonData, index) => {
