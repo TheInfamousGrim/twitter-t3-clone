@@ -1,12 +1,10 @@
-import { InferGetStaticPropsType, type NextPage } from 'next';
+import { type NextPage } from 'next';
 // Dependencies
 import Head from 'next/head';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useUser } from '@clerk/nextjs';
 import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-dayjs.extend(customParseFormat);
 
 // Types
 import type { GetStaticProps } from 'next';
@@ -22,6 +20,7 @@ import { CldImage } from 'next-cloudinary';
 
 // Components
 import { AuthFooter } from '~/components/AuthFooter';
+import { Custom404Component } from '~/components/Error404';
 import { LoadingSpinner } from '~/components/LoadingSpinner';
 import { NewToTwooter } from '~/components/NewToTwooter';
 import { PageLayout } from '~/components/PageLayout';
@@ -87,7 +86,8 @@ const Profile: NextPage<{ username: string }> = ({ username }) => {
     username,
   });
 
-  if (!data || !data.username || !data.profileImageUrl) return <div>404</div>;
+  if (!data || !data.username || !data.profileImageUrl)
+    return <Custom404Component />;
 
   // Handling the user id
   let userPlaceholder;
@@ -114,7 +114,7 @@ const Profile: NextPage<{ username: string }> = ({ username }) => {
       <div className="flex h-full justify-center">
         <SideNavigation />
         <PageLayout>
-          <div className="sticky inset-0 z-20 bg-[#00000033] backdrop-blur-sm">
+          <div className="sticky inset-0 bg-[#00000033] backdrop-blur-sm">
             <div className="flex items-center justify-start gap-4 px-4 py-2">
               <Link
                 href="/"
@@ -165,7 +165,7 @@ const Profile: NextPage<{ username: string }> = ({ username }) => {
                   </button>
                 )}
               </div>
-              <div className="mt-2">
+              <div className="mt-4">
                 <h2 className="text-2xl font-bold not-italic">{`${username}`}</h2>
                 <address className="not-italic text-zinc-500">{`@${username}`}</address>
               </div>

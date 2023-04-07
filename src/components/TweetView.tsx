@@ -1,7 +1,7 @@
 // Dependencies
 import Link from 'next/link';
 import Image from 'next/image';
-import DOMPurify from 'dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 import { useRouter } from 'next/router';
 
 // Dayjs
@@ -71,7 +71,6 @@ const tweetButtonData = [
 
 // API
 import { api, type RouterOutputs, type RouterInputs } from '~/utils/api';
-import { MouseEventHandler } from 'react';
 
 //Types
 type TweetWithUser = {
@@ -156,10 +155,12 @@ export const TweetView = (props: TweetWithUser) => {
                 className="text-zinc-400"
               >{`· ${dayjs(tweet.createdAt).fromNow()}`}</time>
             </div>
-            <div
-              className="mt-1 [&>p]:leading-tight"
-              dangerouslySetInnerHTML={{ __html: cleanTweet }}
-            />
+            <div className="mt-1 sm:max-w-lg">
+              <span
+                dangerouslySetInnerHTML={{ __html: cleanTweet }}
+                className="h-auto break-words break-all [&>p]:leading-tight"
+              ></span>
+            </div>
             <div className="mt-1 flex justify-between">
               {tweetButtonData.map((buttonData, index) => {
                 return (

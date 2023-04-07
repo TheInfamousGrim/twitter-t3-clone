@@ -165,11 +165,14 @@ export const SideNavigation = () => {
               );
             })}
             <button
-              className="tooltip tooltip-top flex w-fit items-center rounded-full bg-bright-pink p-2 duration-150 ease-in hover:bg-pink-700"
+              className="tooltip tooltip-top flex w-fit items-center rounded-full bg-bright-pink p-2 duration-150 ease-in hover:bg-pink-600 xl:flex xl:w-full xl:items-center xl:justify-center"
               data-tip="Tweet"
               onClick={() => setTweetModalOpen(true)}
             >
-              <PencilSquareIcon className="h-8 w-8" />
+              <PencilSquareIcon className="h-8 w-8 xl:hidden" />
+              <p className="hidden text-lg font-bold uppercase xl:block">
+                Twoot
+              </p>
             </button>
           </div>
           <UserButton

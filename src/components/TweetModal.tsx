@@ -1,21 +1,19 @@
 // Dependencies
 import clsx from 'clsx';
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useState } from 'react';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
-import StarterKit from '@tiptap/starter-kit';
-import Placeholder from '@tiptap/extension-placeholder';
-import { useEditor, EditorContent } from '@tiptap/react';
+// Tiptap rich text editor
+import Document from '@tiptap/extension-document';
 import HardBreak from '@tiptap/extension-hard-break';
+import Paragraph from '@tiptap/extension-paragraph';
+import Placeholder from '@tiptap/extension-placeholder';
+import StarterKit from '@tiptap/starter-kit';
+import Text from '@tiptap/extension-text';
+import { useEditor, EditorContent } from '@tiptap/react';
 import { useUser } from '@clerk/nextjs';
-import {
-  useForm,
-  SubmitHandler,
-  useController,
-  Controller,
-  useFormState,
-} from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 
 // Icons
 import { XMarkIcon, GlobeEuropeAfricaIcon } from '@heroicons/react/24/solid';
@@ -60,13 +58,16 @@ const TweetRichTextEditor = (props: {
     },
     extensions: [
       StarterKit,
-      HardBreak.extend({
-        addKeyboardShortcuts() {
-          return {
-            Enter: () => this.editor.commands.setHardBreak(),
-          };
-        },
-      }),
+      Text,
+      Document,
+      Paragraph,
+      // HardBreak.extend({
+      //   addKeyboardShortcuts() {
+      //     return {
+      //       Enter: () => this.editor.commands.setHardBreak(),
+      //     };
+      //   },
+      // }),
       Placeholder.configure({
         emptyEditorClass:
           'text-zinc-500 before:content-[attr(data-placeholder)] float-left h-0 pointer-events-none',
@@ -166,7 +167,7 @@ export const TweetModal = ({
   if (!isLoaded || !isSignedIn) {
     return (
       <Transition.Root show={tweetModalOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={setTweetModalOpen}>
+        <Dialog as="div" className="relative" onClose={setTweetModalOpen}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
