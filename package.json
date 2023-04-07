@@ -19,7 +19,7 @@
     "@tiptap/extension-document": "^2.0.2",
     "@tiptap/extension-hard-break": "^2.0.0-beta.220",
     "@tiptap/extension-paragraph": "^2.0.2",
-    "@tiptap/extension-placeholder": "^2.0.0-beta.220",
+    "@tiptap/extension-placeholder": "^2.0.2",
     "@tiptap/extension-text": "^2.0.2",
     "@tiptap/pm": "^2.0.0-beta.220",
     "@tiptap/react": "^2.0.2",
