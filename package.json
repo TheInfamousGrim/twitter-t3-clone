@@ -26,7 +26,7 @@
     "@tiptap/starter-kit": "^2.0.0-beta.220",
     "@trpc/client": "^10.9.0",
     "@trpc/next": "^10.9.0",
-    "@trpc/react-query": "^10.9.0",
+    "@trpc/react-query": "^10.20.0",
     "@trpc/server": "^10.9.0",
     "@types/dompurify": "^3.0.0",
     "@types/uuid": "^9.0.1",
