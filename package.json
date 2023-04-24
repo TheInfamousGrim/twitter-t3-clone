@@ -13,7 +13,7 @@
   "dependencies": {
     "@clerk/nextjs": "^4.16.2",
     "@headlessui/react": "^1.7.13",
-    "@heroicons/react": "^2.0.16",
+    "@heroicons/react": "^2.0.17",
     "@prisma/client": "^4.9.0",
     "@tanstack/react-query": "^4.20.2",
     "@tiptap/extension-document": "^2.0.2",
